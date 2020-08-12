@@ -1,38 +1,89 @@
 package com.example.popularmovies;
 
-import android.icu.text.RelativeDateTimeFormatter;
-import android.os.AsyncTask;
+import android.widget.Button;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.squareup.picasso.Picasso;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
+import com.example.popularmovies.models.Movie;
 import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
+  private TextView textViewResult;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    textViewResult = findViewById(R.id.text_view_movie);
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl("http://api.themoviedb.org/3/discover/movie/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build();
 
-    new RetrieveMovies().execute("sdsdsd");
-  }
+    MoviesApi moviesApi = retrofit.create(MoviesApi.class);
 
-  public static class RetrieveMovies extends AsyncTask<String, Void, String> {
+    Call<List<Movie>> call = moviesApi.getMovies();
 
-    @Override protected String doInBackground(String... strings) {
-      String string = null;
+    call.enqueue(new Callback<List<Movie>>() {
+      @Override public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
 
-      URL url = NetworkUtils.buildUrl("popularity");
-      try {
-        string = NetworkUtils.getResponseFromHttpUrl(url);
-      } catch (IOException e) {
-        e.printStackTrace();
+        if(!response.isSuccessful()) {
+          textViewResult.setText("response" + response.code());
+          return;
+        }
+
+        List<Movie> movies = response.body();
+
+        for (Movie movie : movies) {
+          String content = "";
+
+          content += "Title:" + movie.getTitle() + "\n";
+          content += "Description:" + movie.getVoteCount() + "\n";
+
+          textViewResult.append(content);
+        }
       }
 
-      return string;
-    }
+      @Override public void onFailure(Call<List<Movie>> call, Throwable t) {
+        textViewResult.setText(t.getMessage());
+      }
+    });
+
+
+    //textViewResult = findViewById(R.id.text_view_result);
+    //Button buttonParse = findViewById(R.id.button_parse);
+    //queue = Volley.newRequestQueue(this);
+
+    //buttonParse.setOnClickListener(new View.OnClickListener() {
+    //  @Override public void onClick(View view) {
+    //    jsonParse();
+    //  }
+    //});
   }
+
+  //private void jsonParse() {
+  //  URL url = NetworkUtils.buildUrl("popularity");
+  //  JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
+  //      new Response.Listener<JSONObject>() {
+  //        @Override public void onResponse(JSONObject response) {
+  //          try {
+  //            JSONArray jsonArray = response.getJSONArray("results");
+  //            for (int i = 0; i < jsonArray.length(); i++) {
+  //              JSONObject movie = jsonArray.getJSONObject(i);
+  //            }
+  //          } catch (JSONException e) {
+  //            e.printStackTrace();
+  //          }
+  //        }
+  //      }, new Response.ErrorListener() {
+  //    @Override public void onErrorResponse(VolleyError error) {
+  //      error.printStackTrace();
+  //    }
+  //  });
+  //}
 }
