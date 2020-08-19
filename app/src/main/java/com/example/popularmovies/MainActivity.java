@@ -2,6 +2,7 @@ package com.example.popularmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.popularmovies.models.MovieResults;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     recyclerView = findViewById(R.id.recyclerView);
     recyclerView.setHasFixedSize(true);
-    layoutManager = new LinearLayoutManager(this);
+    layoutManager = new GridLayoutManager(this, 3);
 
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl(baseUrl)
