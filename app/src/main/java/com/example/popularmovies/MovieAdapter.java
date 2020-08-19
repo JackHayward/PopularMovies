@@ -1,11 +1,13 @@
 package com.example.popularmovies;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.popularmovies.models.MovieResults;
 import com.squareup.picasso.Picasso;
@@ -19,11 +21,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
   public static class MovieViewHolder extends RecyclerView.ViewHolder {
     public ImageView movieImage;
     public TextView movieTitle;
+    public CardView cardView;
 
     public MovieViewHolder(@NonNull View itemView) {
       super(itemView);
       movieImage = itemView.findViewById(R.id.movie_image);
       movieTitle = itemView.findViewById(R.id.movie_title);
+      cardView = (CardView) itemView.findViewById(R.id.card_view);
     }
   }
 
@@ -43,6 +47,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     holder.movieTitle.setText(currentItem.getTitle());
     Picasso.get().load(imageBaseUrl + currentItem.getPoster_path()).into(holder.movieImage);
+    holder.cardView.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+
+        Intent intent = new Intent(view.getContext(), MovieDetailsActivity.class);
+        intent.putExtra("Title", movieList.get(position).getTitle());
+        intent.putExtra("ReleaseDate", movieList.get(position).getRelease_date());
+        intent.putExtra("VoteAverage", Double.toString(movieList.get(position).getVote_average()));
+        intent.putExtra("Synopsis", movieList.get(position).getOverview());
+        intent.putExtra("Image", movieList.get(position).getPoster_path());
+        view.getContext().startActivity(intent);
+
+      }
+    });
   }
 
   @Override public int getItemCount() {
