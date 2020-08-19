@@ -5,4 +5,7 @@
   <string name="release_date">Release Date</string>
   <string name="average_rating">Average Rating</string>
   <string name="plot_synopsis">Plot Synopsis</string>
+  <string name="sort_movies">SORT</string>
+  <string name="sort_popularity">Most Popular</string>
+  <string name="sort_top_rated">Highest Rated</string>
 </resources>
