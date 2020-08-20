@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Movie Title"
+        android:text="@string/movie_title"
         android:textSize="13sp"
         />
   </LinearLayout>
