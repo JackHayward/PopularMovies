@@ -1,4 +1,4 @@
-package com.example.popularmovies;
+package com.example.popularmovies.adapters;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.popularmovies.MovieDetailsActivity;
+import com.example.popularmovies.R;
 import com.example.popularmovies.models.Movie;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;

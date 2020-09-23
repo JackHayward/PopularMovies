@@ -1,6 +1,9 @@
-package com.example.popularmovies;
+package com.example.popularmovies.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.popularmovies.R;
 import com.example.popularmovies.models.MovieTrailer;
-import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapter.MovieTrailerViewHolder> {
 
@@ -42,20 +47,18 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
     MovieTrailer.ResultsBean currentItem = movieList.get(position);
 
     holder.movieTrailerTitle.setText(currentItem.getName());
-    //holder.cardView.setOnClickListener(new View.OnClickListener() {
-    //  @Override public void onClick(View view) {
-    //
-    //    //Intent intent = new Intent(view.getContext(), MovieDetailsActivity.class);
-    //    //intent.putExtra("Title", movieList.get(position).getTitle());
-    //    //intent.putExtra("ReleaseDate", movieList.get(position).getRelease_date());
-    //    //intent.putExtra("VoteAverage", Double.toString(movieList.get(position).getVote_average()));
-    //    //intent.putExtra("Synopsis", movieList.get(position).getOverview());
-    //    //intent.putExtra("Image", movieList.get(position).getPoster_path());
-    //    //intent.putExtra("Id", movieList.get(position).getId());
-    //    //view.getContext().startActivity(intent);
-    //
-    //  }
-    //});
+    holder.cardView.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + currentItem.getKey()));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+            Uri.parse("http://www.youtube.com/watch?v=" + currentItem.getKey()));
+        try {
+          view.getContext().startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+          view.getContext().startActivity(webIntent);
+        }
+      }
+    });
   }
 
   @Override public int getItemCount() {

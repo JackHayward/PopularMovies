@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.popularmovies.adapters.MovieAdapter;
 import com.example.popularmovies.api.MoviesApi;
 import com.example.popularmovies.models.Movie;
 import java.util.ArrayList;
