@@ -47,8 +47,8 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
     MovieTrailer.ResultsBean currentItem = movieList.get(position);
 
     holder.movieTrailerTitle.setText(currentItem.getName());
-    holder.cardView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
+    holder.cardView.setOnClickListener(view -> {
+      if (currentItem.getSite().equals("YouTube")) {
         Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + currentItem.getKey()));
         Intent webIntent = new Intent(Intent.ACTION_VIEW,
             Uri.parse("http://www.youtube.com/watch?v=" + currentItem.getKey()));
