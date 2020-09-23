@@ -3,7 +3,7 @@ package com.example.popularmovies.models;
 import java.io.Serializable;
 import java.util.List;
 
-public class MovieResults implements Serializable
+public class Movie implements Serializable
 {
   private int page;
   private int total_results;

@@ -7,9 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.popularmovies.models.MovieResults;
+import com.example.popularmovies.api.MoviesApi;
+import com.example.popularmovies.models.Movie;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -79,15 +79,15 @@ public class MainActivity extends AppCompatActivity {
         .addConverterFactory(GsonConverterFactory.create())
         .build();
     MoviesApi moviesApi = retrofit.create(MoviesApi.class);
-    Call<MovieResults> call = moviesApi.getMovies(category, apiKey, language, page);
+    Call<Movie> call = moviesApi.getMovies(category, apiKey, language, page);
 
-    ArrayList<MovieResults.ResultsBean> movies = new ArrayList<>();
+    ArrayList<Movie.ResultsBean> movies = new ArrayList<>();
 
-    call.enqueue(new Callback<MovieResults>() {
-      @Override public void onResponse(Call<MovieResults> call, Response<MovieResults> response) {
-        MovieResults movieResults = response.body();
-        assert movieResults != null;
-        List<MovieResults.ResultsBean> parsedMovieList = movieResults.getResults();
+    call.enqueue(new Callback<Movie>() {
+      @Override public void onResponse(Call<Movie> call, Response<Movie> response) {
+        Movie movie = response.body();
+        assert movie != null;
+        List<Movie.ResultsBean> parsedMovieList = movie.getResults();
 
         movies.addAll(parsedMovieList);
 
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
       }
 
-      @Override public void onFailure(Call<MovieResults> call, Throwable t) {
+      @Override public void onFailure(Call<Movie> call, Throwable t) {
         t.printStackTrace();
       }
     });

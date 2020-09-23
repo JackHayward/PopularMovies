@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MovieDetailsActivity"
     >
 
-  <androidx.core.widget.NestedScrollView
+  <ScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginTop="10dp"
@@ -15,7 +15,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
         >
@@ -97,9 +97,19 @@
           android:text="@string/plot_synopsis"
           />
 
+      <TextView
+          android:id="@+id/trailer"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:background="#edecec"
+          android:padding="8dp"
+          android:text="@string/plot_synopsis"
+          />
+
 
     </LinearLayout>
 
-  </androidx.core.widget.NestedScrollView>
+  </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>

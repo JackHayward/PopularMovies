@@ -9,13 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.popularmovies.models.MovieResults;
+import com.example.popularmovies.models.Movie;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-  private ArrayList<MovieResults.ResultsBean> movieList;
+  private ArrayList<Movie.ResultsBean> movieList;
   private static String imageBaseUrl = "http://image.tmdb.org/t/p/w185/";
 
   public static class MovieViewHolder extends RecyclerView.ViewHolder {
@@ -31,7 +31,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
   }
 
-  public MovieAdapter(ArrayList<MovieResults.ResultsBean> movieList) {
+  public MovieAdapter(ArrayList<Movie.ResultsBean> movieList) {
     this.movieList = movieList;
   }
 
@@ -43,7 +43,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
   }
 
   @Override public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-    MovieResults.ResultsBean currentItem = movieList.get(position);
+    Movie.ResultsBean currentItem = movieList.get(position);
 
     holder.movieTitle.setText(currentItem.getTitle());
     Picasso.get().load(imageBaseUrl + currentItem.getPoster_path()).into(holder.movieImage);
