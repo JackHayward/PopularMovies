@@ -19,13 +19,13 @@ public interface MoviesApi {
 
   @GET("/3/movie/{id}/videos")
   Call<MovieTrailer> getTrailers(
-      @Path("videos") String videos,
+      @Path("id") String id,
       @Query("api_key") String apiKey
   );
 
   @GET("/3/movie/{id}/reviews")
   Call<MovieReview> getReviews(
-      @Path("reviews") String reviews,
+      @Path("id") String id,
       @Query("api_key") String apiKey,
       @Query("language") String language,
       @Query("page") int page

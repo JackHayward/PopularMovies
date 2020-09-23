@@ -56,6 +56,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         intent.putExtra("VoteAverage", Double.toString(movieList.get(position).getVote_average()));
         intent.putExtra("Synopsis", movieList.get(position).getOverview());
         intent.putExtra("Image", movieList.get(position).getPoster_path());
+        intent.putExtra("Id", Integer.toString(movieList.get(position).getId()));
         view.getContext().startActivity(intent);
 
       }
