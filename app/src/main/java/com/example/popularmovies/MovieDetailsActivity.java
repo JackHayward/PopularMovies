@@ -28,7 +28,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
   private RecyclerView.Adapter adapter;
   private RecyclerView.LayoutManager verticalLayoutManager;
   private RecyclerView.LayoutManager horizontalLayoutManager;
-  private TextView title,releaseDate,voteAverage,synopsis;
+  private TextView title, releaseDate, voteAverage, synopsis;
   private ImageView image;
   private static String imageBaseUrl = "http://image.tmdb.org/t/p/w185/";
   private static String baseUrl = "http://api.themoviedb.org";

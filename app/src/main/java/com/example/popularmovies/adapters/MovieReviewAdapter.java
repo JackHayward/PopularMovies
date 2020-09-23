@@ -11,7 +11,8 @@ import com.example.popularmovies.R;
 import com.example.popularmovies.models.MovieReview;
 import java.util.ArrayList;
 
-public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewViewHolder> {
+public class MovieReviewAdapter
+    extends RecyclerView.Adapter<MovieReviewAdapter.MovieReviewViewHolder> {
 
   private ArrayList<MovieReview.ResultsBean> movieList;
 
@@ -34,7 +35,8 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
 
   @NonNull @Override
   public MovieReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_review_item, parent, false);
+    View v =
+        LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_review_item, parent, false);
     return new MovieReviewViewHolder(v);
   }
 
