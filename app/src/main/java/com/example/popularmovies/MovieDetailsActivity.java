@@ -1,6 +1,8 @@
 package com.example.popularmovies;
 
 import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.popularmovies.adapters.MovieReviewAdapter;
 import com.example.popularmovies.adapters.MovieTrailerAdapter;
 import com.example.popularmovies.api.MoviesApi;
+import com.example.popularmovies.dao.FavouriteDao;
+import com.example.popularmovies.db.FavouriteDatabase;
+import com.example.popularmovies.models.Favourite;
 import com.example.popularmovies.models.MovieReview;
 import com.example.popularmovies.models.MovieTrailer;
 import com.squareup.picasso.Picasso;
@@ -29,6 +34,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
   private RecyclerView.LayoutManager verticalLayoutManager;
   private RecyclerView.LayoutManager horizontalLayoutManager;
   private TextView title, releaseDate, voteAverage, synopsis;
+  private Button favouriteButton;
   private ImageView image;
   private static String imageBaseUrl = "http://image.tmdb.org/t/p/w185/";
   private static String baseUrl = "http://api.themoviedb.org";
@@ -47,6 +53,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     releaseDate = (TextView) findViewById(R.id.release_date);
     voteAverage = (TextView) findViewById(R.id.average_rating);
     image = (ImageView) findViewById(R.id.movie_thumbnail);
+    favouriteButton = (Button) findViewById(R.id.favourite);
 
     Intent intent = getIntent();
     String intentTitle = intent.getExtras().getString("Title");
@@ -63,6 +70,30 @@ public class MovieDetailsActivity extends AppCompatActivity {
     Picasso.get().load(imageBaseUrl + intentImage).into(image);
     loadTrailers();
     loadReviews();
+
+    favouriteButton.setOnClickListener(new View.OnClickListener() {
+
+      //https://medium.com/mindorks/using-room-database-with-livedata-android-jetpack-cbf89b677b47
+      //https://www.youtube.com/watch?v=ARpn-1FPNE4
+      @Override public void onClick(View view) {
+        FavouriteDatabase favouriteDatabase = FavouriteDatabase.getAppDatabase(view.getContext());
+        Favourite favourite = new Favourite();
+
+        favourite.setMovieId(movieId);
+        favourite.setMovieTitle(intentTitle);
+        favourite.setPosterPath(intentImage);
+        favourite.setSynopsis(intentSynopsis);
+        favourite.setUserRating(intentVoteAverage);
+
+        FavouriteDao dao = favouriteDatabase.favouriteDao();
+        List<Favourite> favouriteList = dao.getAllFavourites();
+
+        if (dao.checkIfFavouriteExists(movieId) == null
+            || dao.checkIfFavouriteExists(movieId).size() == 0) {
+          dao.insert(favourite);
+        }
+      }
+    });
   }
 
   private void loadTrailers() {

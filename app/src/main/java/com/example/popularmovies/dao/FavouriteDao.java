@@ -15,6 +15,9 @@ public interface FavouriteDao {
   @Query("SELECT * FROM 'Favourite' ORDER BY 'id' ASC")
   List<Favourite> getAllFavourites();
 
+  @Query("SELECT * FROM 'Favourite' WHERE 'id' = :id")
+  List<Favourite> checkIfFavouriteExists(String id);
+
   @Delete
   void delete(Favourite favourite);
 }
