@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.popularmovies.adapters.MovieReviewAdapter;
 import com.example.popularmovies.adapters.MovieTrailerAdapter;
 import com.example.popularmovies.api.MoviesApi;
+import com.example.popularmovies.models.MovieReview;
 import com.example.popularmovies.models.MovieTrailer;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -21,15 +23,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-  private RecyclerView recyclerView;
+  private RecyclerView trailerRecyclerView;
+  private RecyclerView reviewRecyclerView;
   private RecyclerView.Adapter adapter;
-  private RecyclerView.LayoutManager layoutManager;
+  private RecyclerView.LayoutManager verticalLayoutManager;
+  private RecyclerView.LayoutManager horizontalLayoutManager;
   private TextView title,releaseDate,voteAverage,synopsis;
   private ImageView image;
   private static String imageBaseUrl = "http://image.tmdb.org/t/p/w185/";
   private static String baseUrl = "http://api.themoviedb.org";
   private static final String apiKey = "1c0e9c5248204984a257ab3dd013c1a1";
   private String movieId = "";
+  private static final String language = "en-US";
+  private static final int page = 1;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +62,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
     voteAverage.setText(intentVoteAverage);
     Picasso.get().load(imageBaseUrl + intentImage).into(image);
     loadTrailers();
+    loadReviews();
   }
 
   private void loadTrailers() {
-    recyclerView = findViewById(R.id.trailerRecyclerView);
-    recyclerView.setHasFixedSize(true);
-    layoutManager = new LinearLayoutManager(this);
+    trailerRecyclerView = findViewById(R.id.trailerRecyclerView);
+    trailerRecyclerView.setHasFixedSize(true);
+    horizontalLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl(baseUrl)
@@ -82,11 +89,45 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         adapter = new MovieTrailerAdapter(movieTrailers);
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        trailerRecyclerView.setLayoutManager(horizontalLayoutManager);
+        trailerRecyclerView.setAdapter(adapter);
       }
 
       @Override public void onFailure(Call<MovieTrailer> call, Throwable t) {
+        t.printStackTrace();
+      }
+    });
+  }
+
+  private void loadReviews() {
+    reviewRecyclerView = findViewById(R.id.reviewRecyclerView);
+    reviewRecyclerView.setHasFixedSize(true);
+    verticalLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+    Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build();
+    MoviesApi moviesApi = retrofit.create(MoviesApi.class);
+    Call<MovieReview> call = moviesApi.getReviews(movieId, apiKey, language, page);
+
+    ArrayList<MovieReview.ResultsBean> movieReviews = new ArrayList<>();
+
+    call.enqueue(new Callback<MovieReview>() {
+      @Override public void onResponse(Call<MovieReview> call, Response<MovieReview> response) {
+        MovieReview movieReview = response.body();
+        assert movieReview != null;
+        List<MovieReview.ResultsBean> parsedMovieReviewsList = movieReview.getResults();
+
+        movieReviews.addAll(parsedMovieReviewsList);
+
+        adapter = new MovieReviewAdapter(movieReviews);
+
+        reviewRecyclerView.setLayoutManager(verticalLayoutManager);
+        reviewRecyclerView.setAdapter(adapter);
+      }
+
+      @Override public void onFailure(Call<MovieReview> call, Throwable t) {
         t.printStackTrace();
       }
     });

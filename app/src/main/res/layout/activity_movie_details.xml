@@ -97,28 +97,60 @@
           android:text="@string/plot_synopsis"
           />
 
-      <LinearLayout
+      <RelativeLayout
           android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+          android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/trailer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="8dp"
-            android:text="@string/movie_trailer_title"
-            android:textStyle="bold"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/trailerRecyclerView"
+        <LinearLayout
+            android:id="@+id/trailerLayout"
             android:layout_width="match_parent"
             android:layout_height="140dp"
-            android:layout_marginTop="10dp"
-            android:padding="8dp"
-            />
-      </LinearLayout>
+            android:orientation="vertical">
+
+          <TextView
+              android:id="@+id/trailer"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:padding="8dp"
+              android:text="@string/movie_trailer_title"
+              android:textStyle="bold"
+              />
+
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/trailerRecyclerView"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:padding="8dp"
+              />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@id/trailerLayout">
+
+          <TextView
+              android:id="@+id/reviews"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:padding="8dp"
+              android:text="@string/reviews"
+              android:textStyle="bold"
+              />
+
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/reviewRecyclerView"
+              android:layout_width="match_parent"
+              android:layout_height="240dp"
+              android:layout_marginTop="10dp"
+              android:padding="8dp"
+              />
+        </LinearLayout>
+      </RelativeLayout>
     </LinearLayout>
   </ScrollView>
 </RelativeLayout>
