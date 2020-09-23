@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:textSize="13sp"
+        android:textSize="17sp"
         android:textColor="#141414"
         android:textStyle="bold"/>
 
@@ -31,8 +31,7 @@
         android:gravity="start"
         android:layout_below="@id/movie_reviewer_name"
         android:textSize="13sp"
-        android:textColor="#141414"
-        android:textStyle="bold"/>
+        android:textColor="#141414"/>
   </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
