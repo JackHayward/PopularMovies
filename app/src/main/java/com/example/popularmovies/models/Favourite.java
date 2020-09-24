@@ -26,6 +26,15 @@ public class Favourite {
   @ColumnInfo(name = "synopsis")
   private String synopsis;
 
+  public Favourite(String movieId, String movieTitle, String userRating, String posterPath,
+      String synopsis) {
+    this.movieId = movieId;
+    this.movieTitle = movieTitle;
+    this.userRating = userRating;
+    this.posterPath = posterPath;
+    this.synopsis = synopsis;
+  }
+
   public int getId() {
     return id;
   }
