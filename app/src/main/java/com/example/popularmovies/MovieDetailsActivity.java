@@ -5,8 +5,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.popularmovies.adapters.MovieReviewAdapter;
@@ -15,6 +21,7 @@ import com.example.popularmovies.api.MoviesApi;
 import com.example.popularmovies.dao.FavouriteDao;
 import com.example.popularmovies.db.FavouriteDatabase;
 import com.example.popularmovies.models.Favourite;
+import com.example.popularmovies.models.FavouriteViewModel;
 import com.example.popularmovies.models.MovieReview;
 import com.example.popularmovies.models.MovieTrailer;
 import com.squareup.picasso.Picasso;
@@ -27,7 +34,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieDetailsActivity extends AppCompatActivity {
-
   private RecyclerView trailerRecyclerView;
   private RecyclerView reviewRecyclerView;
   private RecyclerView.Adapter adapter;
@@ -42,6 +48,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
   private String movieId = "";
   private static final String language = "en-US";
   private static final int page = 1;
+  private FavouriteViewModel favouriteViewModel;
+  private List<Favourite> favouriteList = new ArrayList<>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +62,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     voteAverage = (TextView) findViewById(R.id.average_rating);
     image = (ImageView) findViewById(R.id.movie_thumbnail);
     favouriteButton = (Button) findViewById(R.id.favourite);
-
     Intent intent = getIntent();
     String intentTitle = intent.getExtras().getString("Title");
     String intentReleaseDate = intent.getExtras().getString("ReleaseDate");
@@ -62,6 +69,22 @@ public class MovieDetailsActivity extends AppCompatActivity {
     String intentSynopsis = intent.getExtras().getString("Synopsis");
     String intentImage = intent.getExtras().getString("Image");
     movieId = intent.getExtras().getString("Id");
+
+    favouriteViewModel = ViewModelProviders.of(this).get(FavouriteViewModel.class);
+
+    favouriteViewModel.getAllFavourites().observe(this, favourites -> {
+      favouriteList = favourites;
+      favouriteButton.setText(R.string.Favourite);
+      if (favourites.size() > 0) {
+        for (Favourite favourite : favourites) {
+          if (favourite.getMovieId().equals(movieId)) {
+            favouriteButton.setText(R.string.Unfavourite);
+          }
+        }
+      } else {
+        favouriteButton.setText(R.string.Favourite);
+      }
+    });
 
     title.setText(intentTitle);
     synopsis.setText(intentSynopsis);
@@ -72,26 +95,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
     loadReviews();
 
     favouriteButton.setOnClickListener(new View.OnClickListener() {
-
-      //https://medium.com/mindorks/using-room-database-with-livedata-android-jetpack-cbf89b677b47
-      //https://www.youtube.com/watch?v=ARpn-1FPNE4
       @Override public void onClick(View view) {
-        FavouriteDatabase favouriteDatabase = FavouriteDatabase.getAppDatabase(view.getContext());
-        Favourite favourite = new Favourite();
 
-        favourite.setMovieId(movieId);
-        favourite.setMovieTitle(intentTitle);
-        favourite.setPosterPath(intentImage);
-        favourite.setSynopsis(intentSynopsis);
-        favourite.setUserRating(intentVoteAverage);
+        Favourite favourite = new Favourite(movieId, intentTitle, intentVoteAverage, intentImage, intentSynopsis, intentReleaseDate);
 
-        FavouriteDao dao = favouriteDatabase.favouriteDao();
-        List<Favourite> favouriteList = dao.getAllFavourites();
-
-        if (dao.checkIfFavouriteExists(movieId) == null
-            || dao.checkIfFavouriteExists(movieId).size() == 0) {
-          dao.insert(favourite);
+        for (Favourite favouriteItem : favouriteList) {
+          if (favouriteItem.getMovieId().equals(movieId)) {
+            favourite.setId(favouriteItem.getId());
+            break;
+          }
         }
+
+        boolean has = favouriteList.stream().anyMatch(e -> e.getMovieId().equals(movieId));
+
+        if (has) {
+          favouriteViewModel.delete(favourite);
+        } else  {
+          favouriteViewModel.insert(favourite);
+        }
+
       }
     });
   }

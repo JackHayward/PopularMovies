@@ -3,13 +3,18 @@ package com.example.popularmovies;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.popularmovies.adapters.MovieAdapter;
 import com.example.popularmovies.api.MoviesApi;
+import com.example.popularmovies.models.Favourite;
+import com.example.popularmovies.models.FavouriteViewModel;
 import com.example.popularmovies.models.Movie;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
   private static final int page = 1;
   private static final String apiKey = "1c0e9c5248204984a257ab3dd013c1a1";
   private static String category = "popular";
+  private FavouriteViewModel favouriteViewModel;
 
   public MainActivity() {
   }
@@ -37,6 +43,13 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    favouriteViewModel = ViewModelProviders.of(this).get(FavouriteViewModel.class);
+    favouriteViewModel.getAllFavourites().observe(this, new Observer<List<Favourite>>() {
+      @Override public void onChanged(List<Favourite> favourites) {
+
+      }
+    });
 
     loadPage(1);
   }

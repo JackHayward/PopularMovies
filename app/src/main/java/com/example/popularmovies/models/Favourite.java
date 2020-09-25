@@ -26,13 +26,25 @@ public class Favourite {
   @ColumnInfo(name = "synopsis")
   private String synopsis;
 
+  @ColumnInfo(name = "release_date")
+  private String releaseDate;
+
   public Favourite(String movieId, String movieTitle, String userRating, String posterPath,
-      String synopsis) {
+      String synopsis, String releaseDate) {
     this.movieId = movieId;
     this.movieTitle = movieTitle;
     this.userRating = userRating;
     this.posterPath = posterPath;
     this.synopsis = synopsis;
+    this.releaseDate = releaseDate;
+  }
+
+  public void setReleaseDate(String releaseDate) {
+    this.releaseDate = releaseDate;
+  }
+
+  public String getReleaseDate() {
+    return releaseDate;
   }
 
   public int getId() {

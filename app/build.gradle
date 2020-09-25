@@ -6,7 +6,7 @@ android {
 
   defaultConfig {
     applicationId "com.example.popularmovies"
-    minSdkVersion 16
+    minSdkVersion 24
     targetSdkVersion 30
     versionCode 1
     versionName "1.0"
@@ -45,5 +45,5 @@ dependencies {
   androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
   implementation "android.arch.persistence.room:runtime:1.1.1"
   annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
-  implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
+  implementation "android.arch.lifecycle:extensions:1.1.1"
 }

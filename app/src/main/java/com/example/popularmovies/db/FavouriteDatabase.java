@@ -7,15 +7,16 @@ import androidx.room.RoomDatabase;
 import com.example.popularmovies.dao.FavouriteDao;
 import com.example.popularmovies.models.Favourite;
 
-@Database(entities = { Favourite.class }, version = 1, exportSchema = false)
+@Database(entities = { Favourite.class }, version = 2, exportSchema = false)
 public abstract class FavouriteDatabase extends RoomDatabase {
   public abstract FavouriteDao favouriteDao();
 
   private static FavouriteDatabase INSTANCE;
 
-  public static FavouriteDatabase getAppDatabase(Context context) {
+  public static synchronized FavouriteDatabase getInstance(Context context) {
     if (INSTANCE == null) {
-      INSTANCE = Room.databaseBuilder(context.getApplicationContext(), FavouriteDatabase.class, "favourite-database").build();
+      INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+          FavouriteDatabase.class, "favourite-database").fallbackToDestructiveMigration().build();
     }
     return INSTANCE;
   }

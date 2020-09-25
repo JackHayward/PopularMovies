@@ -1,5 +1,6 @@
 package com.example.popularmovies.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -9,15 +10,16 @@ import java.util.List;
 
 @Dao
 public interface FavouriteDao {
+
   @Insert
-  Long insert(Favourite favourite);
-
-  @Query("SELECT * FROM 'Favourite' ORDER BY 'id' ASC")
-  List<Favourite> getAllFavourites();
-
-  @Query("SELECT * FROM 'Favourite' WHERE 'id' = :id")
-  List<Favourite> checkIfFavouriteExists(String id);
+  void insert(Favourite favourite);
 
   @Delete
   void delete(Favourite favourite);
+
+  @Query("SELECT * FROM 'Favourite' ORDER BY 'id' ASC")
+  LiveData<List<Favourite>> getAllFavourites();
+
+  //@Query("DELETE FROM Favourite")
+  //void nukeTable();
 }
