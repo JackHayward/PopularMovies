@@ -1,5 +1,6 @@
 package com.example.popularmovies;
 
+import android.content.Context;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -7,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String apiKey = "1c0e9c5248204984a257ab3dd013c1a1";
   private static String category = "popular";
   private FavouriteViewModel favouriteViewModel;
+  List<Favourite> favouriteMovies = new ArrayList<>();
 
   public MainActivity() {
   }
@@ -47,7 +50,12 @@ public class MainActivity extends AppCompatActivity {
     favouriteViewModel = ViewModelProviders.of(this).get(FavouriteViewModel.class);
     favouriteViewModel.getAllFavourites().observe(this, new Observer<List<Favourite>>() {
       @Override public void onChanged(List<Favourite> favourites) {
+        favouriteMovies =
+            favouriteViewModel.getAllFavourites().getValue();
 
+        if (currentSortMode == 3) {
+          loadFavourites();
+        }
       }
     });
 
@@ -68,9 +76,15 @@ public class MainActivity extends AppCompatActivity {
       case R.id.sort_by_top:
         currentSortMode = 2;
         break;
+      case R.id.favourites:
+        currentSortMode = 3;
+        loadFavourites();
+        break;
     }
 
-    loadPage(1);
+    if (currentSortMode == 1 || currentSortMode == 2) {
+      loadPage(1);
+    }
     return super.onOptionsItemSelected(item);
   }
 
@@ -85,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
         break;
       case 2:
         category = "top_rated";
+        break;
+      case 3:
+        loadFavourites();
         break;
     }
 
@@ -115,5 +132,29 @@ public class MainActivity extends AppCompatActivity {
         t.printStackTrace();
       }
     });
+  }
+
+  private void loadFavourites() {
+    favouriteViewModel = ViewModelProviders.of(this).get(FavouriteViewModel.class);
+    ArrayList<Movie.ResultsBean> finalMovieList = new ArrayList<>();
+
+    favouriteMovies =
+        favouriteViewModel.getAllFavourites().getValue();
+
+    for (Favourite favouriteItem : favouriteMovies) {
+      Movie.ResultsBean movie = new Movie.ResultsBean();
+      movie.setId(Integer.parseInt(favouriteItem.getMovieId()));
+      movie.setTitle(favouriteItem.getMovieTitle());
+      movie.setVote_average(Double.parseDouble(favouriteItem.getUserRating()));
+      movie.setPoster_path(favouriteItem.getPosterPath());
+      movie.setOverview(favouriteItem.getSynopsis());
+
+      finalMovieList.add(movie);
+    }
+
+    adapter = new MovieAdapter(finalMovieList);
+
+    recyclerView.setLayoutManager(layoutManager);
+    recyclerView.setAdapter(adapter);
   }
 }
