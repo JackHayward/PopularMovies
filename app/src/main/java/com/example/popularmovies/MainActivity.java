@@ -47,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    if (savedInstanceState != null) {
+      currentSortMode = savedInstanceState.getInt("sort");
+    }
+
     favouriteViewModel = ViewModelProviders.of(this).get(FavouriteViewModel.class);
     favouriteViewModel.getAllFavourites().observe(this, new Observer<List<Favourite>>() {
       @Override public void onChanged(List<Favourite> favourites) {
@@ -59,7 +63,23 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    loadPage(1);
+    switch (currentSortMode) {
+      case 1:
+        loadPage(1);
+        break;
+      case 2:
+        loadPage(1);
+        break;
+      case 3:
+        loadFavourites();
+        break;
+    }
+
+  }
+
+  @Override protected void onSaveInstanceState(@NonNull Bundle outState) {
+    outState.putInt("sort", currentSortMode);
+    super.onSaveInstanceState(outState);
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,6 +155,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void loadFavourites() {
+    recyclerView = findViewById(R.id.recyclerView);
+    recyclerView.setHasFixedSize(true);
+    layoutManager = new GridLayoutManager(this, 3);
     favouriteViewModel = ViewModelProviders.of(this).get(FavouriteViewModel.class);
     ArrayList<Movie.ResultsBean> finalMovieList = new ArrayList<>();
 
@@ -151,9 +174,8 @@ public class MainActivity extends AppCompatActivity {
 
       finalMovieList.add(movie);
     }
-
+    
     adapter = new MovieAdapter(finalMovieList);
-
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setAdapter(adapter);
   }
